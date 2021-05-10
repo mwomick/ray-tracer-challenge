@@ -3,7 +3,7 @@ CC = g++
 CC_DEBUG = @$(CC) -std=c++11
 CC_RELEASE = @$(CC) -std=c++11 -O3 -DNDEBUG
 
-G_DEPS = src/core/*.cpp Makefile
+G_DEPS = src/core/*.cpp
 
 G_INC = -I.
 
