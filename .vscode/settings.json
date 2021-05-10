@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "__bit_reference": "cpp",
+        "complex": "cpp",
+        "iterator": "cpp",
+        "string": "cpp",
+        "algorithm": "cpp"
+    }
+}
