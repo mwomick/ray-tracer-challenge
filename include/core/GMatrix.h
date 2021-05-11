@@ -27,6 +27,7 @@ private:
     float fMat[4]; 
 };
 
+/////////////////////////////////////////////////////////////////////////////////////
 
 class GMatrix33 {
 public:
@@ -64,8 +65,13 @@ public:
     }
 
     float cofactor(int row, int col) {
-        if(G_INT_ISODD(row*3+col)) return -1*minor(row, col);
+        if(G_INT_ISODD(row+col)) return -1*minor(row, col);
         else return minor(row, col);
+    }
+
+    float det() {
+        return fMat[0]*this->cofactor(0, 0) + fMat[1]*this->cofactor(0, 1) + 
+               fMat[2]*this->cofactor(0,2);
     }
 
     float operator[](int index) {
@@ -76,6 +82,7 @@ private:
     float fMat[9]; 
 };
 
+/////////////////////////////////////////////////////////////////////////////////////
 
 class GMatrix44 {
 public:
@@ -137,7 +144,37 @@ public:
                          out[6], out[7], out[8]);
     }
 
+    float minor(int row, int col) {
+        GMatrix33 m = this->submatrix(row, col);
+        return m.det();
+    }
 
+    float cofactor(int row, int col) {
+        if(G_INT_ISODD(row+col)) return -1*minor(row, col);
+        else return minor(row, col);
+    }
+
+    float det() {
+        return fMat[0]*this->cofactor(0, 0) + fMat[1]*this->cofactor(0, 1) + 
+               fMat[2]*this->cofactor(0,2) + fMat[3]*this->cofactor(0, 3);
+    }
+
+    GMatrix44 inverse() {
+        float det = this->det();
+        if(G_FL_EQUAL(det, 0)) { return GMatrix44(); }
+        
+        float matrix[16];
+        for(int i = 0; i < 4; i++) {
+            for(int j = 0; j < 4; j++) {
+                matrix[i+(j<<2)] = this->cofactor(i, j) / det;
+            }
+        }
+
+        return GMatrix44(matrix[0], matrix[1], matrix[2], matrix[3], 
+                         matrix[4], matrix[5], matrix[6], matrix[7],
+                         matrix[8], matrix[9], matrix[10], matrix[11], 
+                         matrix[12], matrix[13], matrix[14], matrix[15]);
+    }
 
 private:
     float fMat[16]; 
