@@ -1,7 +1,81 @@
-#ifndef GMatrix44_DEFINED
-#define GMatrix44_DEFINED
+#ifndef GMatrix_DEFINED
+#define GMatrix_DEFINED
 
 #include "include/core/GMath.h"
+
+class GMatrix22 {
+public:
+ 
+    GMatrix22() : fMat {1, 0, 
+                        0, 1}
+    {}
+    
+    GMatrix22(float a, float b, float c, float d) {
+        fMat[0] = a;   fMat[1] = b;    
+        fMat[2] = c;   fMat[3] = d;
+    }
+
+    float det() {
+        return fMat[0]*fMat[3] - fMat[1]*fMat[2];
+    }
+
+    float operator[](int index) {
+        return fMat[index];
+    }
+
+private:
+    float fMat[4]; 
+};
+
+
+class GMatrix33 {
+public:
+ 
+    GMatrix33() : fMat {1, 0, 0, 
+                        0, 1, 0,
+                        0, 0, 1} 
+    {}
+    
+    GMatrix33(float a, float b, float c, 
+              float d, float e, float f, 
+              float g, float h, float i) {
+        fMat[0] = a;   fMat[1] = b;    fMat[2] = c;
+        fMat[3] = d;   fMat[4] = e;    fMat[5] = f;
+        fMat[6] = g;   fMat[7] = h;    fMat[8] = i;
+    }
+
+    GMatrix22 submatrix(int row, int col) {
+        float out[4];
+        int index = 0;
+        for(int i = 0; i < 3; i++) {
+            if(row == i) continue; 
+            for(int j = 0; j < 3; j++) {
+                if(col == j) continue;
+                out[index++] = this->fMat[i*3+j];
+            }
+        }
+        return GMatrix22(out[0], out[1], 
+                         out[2], out[3]);
+    }
+
+    float minor(int row, int col) {
+        GMatrix22 m = this->submatrix(row, col);
+        return m.det();
+    }
+
+    float cofactor(int row, int col) {
+        if(G_INT_ISODD(row*3+col)) return -1*minor(row, col);
+        else return minor(row, col);
+    }
+
+    float operator[](int index) {
+        return fMat[index];
+    }
+
+private:
+    float fMat[9]; 
+};
+
 
 class GMatrix44 {
 public:
@@ -41,54 +115,32 @@ public:
                          matrix[12], matrix[13], matrix[14], matrix[15]);
     }
 
+    GMatrix44 transpose() {
+        return GMatrix44(this->fMat[0], this->fMat[4], this->fMat[8], this->fMat[12],
+                        this->fMat[1], this->fMat[5], this->fMat[9], this->fMat[13], 
+                        this->fMat[2], this->fMat[6], this->fMat[10], this->fMat[14],
+                        this->fMat[3], this->fMat[7], this->fMat[11], this->fMat[15]);
+    }
+
+    GMatrix33 submatrix(int row, int col) {
+        float out[9];
+        int index = 0;
+        for(int i = 0; i < 4; i++) {
+            if(row == i) continue; 
+            for(int j = 0; j < 4; j++) {
+                if(col == j) continue;
+                out[index++] = this->fMat[(i<<2)+j];
+            }
+        }
+        return GMatrix33(out[0], out[1], out[2], 
+                         out[3], out[4], out[5],
+                         out[6], out[7], out[8]);
+    }
+
+
+
 private:
     float fMat[16]; 
-};
-
-#endif
-
-#ifndef GMatrix33_DEFINED
-#define GMatrix33_DEFINED
-
-class GMatrix33 {
-public:
- 
-    GMatrix33() : fMat {1, 0, 0, 
-                        0, 1, 0,
-                        0, 0, 1} 
-    {}
-    
-    GMatrix33(float a, float b, float c, 
-              float d, float e, float f, 
-              float g, float h, float i) {
-        fMat[0] = a;   fMat[1] = b;    fMat[2] = c;
-        fMat[3] = d;   fMat[4] = e;    fMat[5] = f;
-        fMat[6] = g;   fMat[7] = h;    fMat[8] = i;
-    }
-
-private:
-    float fMat[9]; 
-};
-
-#endif
-
-#ifndef GMatrix22_DEFINED
-#define GMatrix22_DEFINED
-
-class GMatrix22 {
-public:
- 
-    GMatrix22() : fMat {1, 0, 
-                        0, 1}
-    {}
-    
-    GMatrix22(float a, float b, float c, float d) {
-        fMat[0] = a;   fMat[1] = b;    
-        fMat[2] = c;   fMat[3] = d;
-    }
-
-private:
-    float fMat[4]; 
 };
 
 #endif
