@@ -13,5 +13,11 @@ canvas: $(G_DEPS) tests/CanvasTest.cpp
 matrix: $(G_DEPS) tests/MatrixTest.cpp
 	$(CC_DEBUG) $(G_INC) $(G_DEPS) tests/MatrixTest.cpp -o matrix
 
+transformations: $(G_DEPS) tests/TransformationsTest.cpp
+	$(CC_DEBUG) $(G_INC) $(G_DEPS) tests/TransformationsTest.cpp -o transformations
+
+spheres: $(G_DEPS) tests/SpheresTest.cpp
+	$(CC_DEBUG) $(G_INC) $(G_DEPS) tests/SpheresTest.cpp -o spheres
+
 clean: 
-	@rm -rf canvas matrix *.ppm
+	@rm -rf canvas matrix transformations spheres *.ppm

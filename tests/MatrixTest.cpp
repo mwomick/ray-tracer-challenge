@@ -3,8 +3,6 @@
 #include <assert.h>
 #include <iostream>
 
-// #include "include/core/GMath.h"
-
 using namespace std;
 
 int main() {

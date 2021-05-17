@@ -1,4 +1,6 @@
 # Executables and output
 matrix
 canvas
+transformations
+spheres
 *.ppm

@@ -13,7 +13,7 @@ bool GCanvas::writeToFile(const char path[]) {
         for(int x = 0; x < this-> fWidth; x++) {
             if(x % 23 == 22) { file << "\n"; }
             GTuple* color = this->getAddr(x, y);
-            file << color->fX*255 << " " << color->fY*255 << " " << color->fZ*255 << " ";
+            file << color->x()*255 << " " << color->y()*255 << " " << color->z()*255 << " ";
         }
         file << "\n";
     }

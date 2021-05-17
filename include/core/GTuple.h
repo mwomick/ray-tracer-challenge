@@ -1,3 +1,6 @@
+#ifndef GTuple_DEFINED
+#define GTuple_DEFINED
+
 #include <math.h>
  
 #include "include/core/GMath.h"
@@ -5,9 +8,6 @@
 class GTuple {
 
 public:
-
-    float fX, fY, fZ, fW;
-
     inline bool isPoint() { return G_FL_EQUAL(fW, 1.); }
     inline bool isVector() { return G_FL_EQUAL(fW, 0.);}
 
@@ -40,4 +40,15 @@ public:
     GTuple operator/(const float& rhs);
     GTuple operator*(const float& rhs);
 
+
+    float x() { return fX; }
+    float y() { return fY; }
+    float z() { return fZ; }
+    float w() { return fW; }
+    
+private:
+    float fX, fY, fZ, fW;
+
 };
+
+#endif

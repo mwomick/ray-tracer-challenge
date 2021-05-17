@@ -1,7 +1,10 @@
 #ifndef GMatrix_DEFINED
 #define GMatrix_DEFINED
 
+#include <math.h>
+
 #include "include/core/GMath.h"
+#include "include/core/GTuple.h"
 
 class GMatrix22 {
 public:
@@ -45,44 +48,25 @@ public:
         fMat[6] = g;   fMat[7] = h;    fMat[8] = i;
     }
 
-    GMatrix22 submatrix(int row, int col) {
-        float out[4];
-        int index = 0;
-        for(int i = 0; i < 3; i++) {
-            if(row == i) continue; 
-            for(int j = 0; j < 3; j++) {
-                if(col == j) continue;
-                out[index++] = this->fMat[i*3+j];
-            }
-        }
-        return GMatrix22(out[0], out[1], 
-                         out[2], out[3]);
-    }
-
-    float minor(int row, int col) {
-        GMatrix22 m = this->submatrix(row, col);
-        return m.det();
-    }
-
-    float cofactor(int row, int col) {
-        if(G_INT_ISODD(row+col)) return -1*minor(row, col);
-        else return minor(row, col);
-    }
-
-    float det() {
-        return fMat[0]*this->cofactor(0, 0) + fMat[1]*this->cofactor(0, 1) + 
-               fMat[2]*this->cofactor(0,2);
-    }
-
     float operator[](int index) {
         return fMat[index];
     }
+
+    GMatrix22 submatrix(int, int);
+    float minor(int, int);
+    float cofactor(int, int);
+    float det();
 
 private:
     float fMat[9]; 
 };
 
 /////////////////////////////////////////////////////////////////////////////////////
+
+enum { kSX, kKXY, kKXZ, kTX, 
+       kKYX, kSY, kKYZ, kTY,
+       kKZX, kKZY, kSZ, kTZ,
+};
 
 class GMatrix44 {
 public:
@@ -106,74 +90,63 @@ public:
         return fMat[index];
     }
 
-    GMatrix44 operator*(const GMatrix44& rhs) {
-        float matrix[16];
-        for(int i = 0; i < 4; i++) {
-            for(int j = 0; j < 4; j++) {
-                matrix[j+(i<<2)] = this->fMat[(i<<2)] * rhs.fMat[j] +
-                                   this->fMat[(i<<2)+1] * rhs.fMat[j+4] +
-                                   this->fMat[(i<<2)+2] * rhs.fMat[j+8] +
-                                   this->fMat[(i<<2)+3] * rhs.fMat[j+12];
-            }
-        }
-        return GMatrix44(matrix[0], matrix[1], matrix[2], matrix[3], 
-                         matrix[4], matrix[5], matrix[6], matrix[7],
-                         matrix[8], matrix[9], matrix[10], matrix[11], 
-                         matrix[12], matrix[13], matrix[14], matrix[15]);
+    GMatrix44 operator*(const GMatrix44& rhs) { return this->multiply(rhs); }
+    GTuple operator*(GTuple rhs) { 
+        float x, y, z;
+        x = rhs.x()*this->fMat[kSX] + rhs.x()*this->fMat[kKXY] + rhs.x()*this->fMat[kKXZ] + this->fMat[kTX];
+        y = rhs.y()*this->fMat[kSY] + rhs.y()*this->fMat[kKYX] + rhs.y()*this->fMat[kKYZ] + this->fMat[kTY];
+        z = rhs.z()*this->fMat[kSZ] + rhs.z()*this->fMat[kKZX] + rhs.z()*this->fMat[kKZY] + this->fMat[kTZ];
+        return GTuple(x, y, z);
     }
 
-    GMatrix44 transpose() {
-        return GMatrix44(this->fMat[0], this->fMat[4], this->fMat[8], this->fMat[12],
-                        this->fMat[1], this->fMat[5], this->fMat[9], this->fMat[13], 
-                        this->fMat[2], this->fMat[6], this->fMat[10], this->fMat[14],
-                        this->fMat[3], this->fMat[7], this->fMat[11], this->fMat[15]);
+    GMatrix44 multiply(const GMatrix44&);
+    GMatrix44 transpose();
+    GMatrix33 submatrix(int, int);
+    float minor(int, int);
+    float cofactor(int, int);
+    float det();
+    GMatrix44 inverse();
+
+    static GMatrix44 Translate(float tx, float ty, float tz) {
+        return GMatrix44(1, 0, 0, tx,
+                         0, 1, 0, ty, 
+                         0, 0, 1, tz,
+                         0, 0, 0, 1);
     }
 
-    GMatrix33 submatrix(int row, int col) {
-        float out[9];
-        int index = 0;
-        for(int i = 0; i < 4; i++) {
-            if(row == i) continue; 
-            for(int j = 0; j < 4; j++) {
-                if(col == j) continue;
-                out[index++] = this->fMat[(i<<2)+j];
-            }
-        }
-        return GMatrix33(out[0], out[1], out[2], 
-                         out[3], out[4], out[5],
-                         out[6], out[7], out[8]);
+    static GMatrix44 Scale(float sx, float sy, float sz) {
+        return GMatrix44(sx, 0, 0, 0,
+                         0, sy, 0, 0, 
+                         0, 0, sz, 0,
+                         0, 0, 0, 1);
     }
 
-    float minor(int row, int col) {
-        GMatrix33 m = this->submatrix(row, col);
-        return m.det();
+    static GMatrix44 Skew(float kxy, float kxz, float kyx, float kyz, float kzx, float kzy) {
+        return GMatrix44(1, kxy, kxz, 0,
+                         kyx, 1, kyz, 0, 
+                         kzx, kzy, 1, 0,
+                         0, 0, 0, 1);
     }
 
-    float cofactor(int row, int col) {
-        if(G_INT_ISODD(row+col)) return -1*minor(row, col);
-        else return minor(row, col);
+    static GMatrix44 RotateX(float angle) {
+        return GMatrix44(1, 0, 0, 0,
+                         0, cos(angle), -sin(angle), 0,
+                         0, sin(angle), cos(angle), 0,
+                         0, 0, 0, 1);
     }
 
-    float det() {
-        return fMat[0]*this->cofactor(0, 0) + fMat[1]*this->cofactor(0, 1) + 
-               fMat[2]*this->cofactor(0,2) + fMat[3]*this->cofactor(0, 3);
+    static GMatrix44 RotateY(float angle) {
+        return GMatrix44(cos(angle), 0, sin(angle), 0,
+                         0, 1, 0, 0,
+                         -sin(angle), 0, cos(angle), 0,
+                         0, 0, 0, 1);
     }
 
-    GMatrix44 inverse() {
-        float det = this->det();
-        if(G_FL_EQUAL(det, 0)) { return GMatrix44(); }
-        
-        float matrix[16];
-        for(int i = 0; i < 4; i++) {
-            for(int j = 0; j < 4; j++) {
-                matrix[i+(j<<2)] = this->cofactor(i, j) / det;
-            }
-        }
-
-        return GMatrix44(matrix[0], matrix[1], matrix[2], matrix[3], 
-                         matrix[4], matrix[5], matrix[6], matrix[7],
-                         matrix[8], matrix[9], matrix[10], matrix[11], 
-                         matrix[12], matrix[13], matrix[14], matrix[15]);
+    static GMatrix44 RotateZ(float angle) {
+        return GMatrix44(cos(angle), -sin(angle), 0, 0, 
+                         sin(angle), cos(angle), 0, 0, 
+                         0, 0, 1, 0,
+                         0, 0, 0, 1);
     }
 
 private:
