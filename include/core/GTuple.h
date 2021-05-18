@@ -29,8 +29,9 @@ public:
     float magnitude();
     float length();
     float lengthSquared();
-    GTuple norm();
-
+    GTuple normalized();
+    
+    GTuple reflect(GTuple&);
     float dot(GTuple&);
     GTuple cross(GTuple&);
 

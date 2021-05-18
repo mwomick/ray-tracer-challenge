@@ -6,12 +6,11 @@
 
 class GSphere {
 public:
-    GSphere() { fOrigin = GTuple(0, 0, 0); fRadius = 1; }
+    GSphere() {}
     bool intersect(GRay&, float&, float&);
     void transform(GMatrix44 matrix);
+    GTuple normal_at(GTuple& point);
 private:
-    GTuple fOrigin;
-    float fRadius;
     GMatrix44 fMatrix;
 };
 
