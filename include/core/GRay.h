@@ -16,15 +16,24 @@ public:
     }
 
     GTuple direction() {
-        return this->fMatrix * this->fDirection;
+        GMatrix44 dir_matrix = GMatrix44(fMatrix[kSX], fMatrix[kKXY], fMatrix[kKXZ], 0,
+                                        fMatrix[kKYX], fMatrix[kSY], fMatrix[kKYZ], 0,
+                                        fMatrix[kKZX], fMatrix[kKZY], fMatrix[kSZ], 0,
+                                        0, 0, 0, 1);
+        
+        return dir_matrix * this->fDirection;
     }
 
     GTuple position(float t) {
-        return this->fMatrix * this->fOrigin + this->fMatrix * this->fDirection * t;
+        return this->fMatrix * this->fOrigin + this->direction() * t;
     }
 
-    void transform(GMatrix44 matrix) {
-        this->fMatrix = this->fMatrix * matrix;
+    void setMatrix(GMatrix44 matrix) { fMatrix = matrix; }
+
+    GRay transform(GMatrix44 matrix) {
+        GRay ray = GRay(fOrigin, fDirection); 
+        ray.setMatrix(matrix * fMatrix);
+        return ray;
     }
 
 private:
