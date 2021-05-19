@@ -29,7 +29,7 @@ public:
     float magnitude();
     float length();
     float lengthSquared();
-    GTuple normalized();
+    GTuple normalize();
     
     GTuple reflect(GTuple&);
     float dot(GTuple&);
@@ -40,12 +40,14 @@ public:
     GTuple operator-();
     GTuple operator/(const float& rhs);
     GTuple operator*(const float& rhs);
+    GTuple operator*(const GTuple& rhs);
 
+    void setW(float w) { fW = w; }
 
-    float x() { return fX; }
-    float y() { return fY; }
-    float z() { return fZ; }
-    float w() { return fW; }
+    float x() const { return fX; }
+    float y() const { return fY; }
+    float z() const { return fZ; }
+    float w() const { return fW; }
     
 private:
     float fX, fY, fZ, fW;

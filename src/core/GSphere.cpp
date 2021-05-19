@@ -30,8 +30,11 @@ bool GSphere::intersect(GRay& ray, float& t0, float& t1) {
     return true;
 }
 
-GTuple normal_at(GTuple& point) {
-    return (fMatrix.inverse() * point).normalize();
+GTuple GSphere::normal_at(GTuple& point) {
+    GTuple obj_normal = fMatrix.inverse() * point;
+    GTuple world_normal = fMatrix.inverse().transpose() * obj_normal;
+    world_normal.setW(0);
+    return world_normal.normalize();
 }
 
 void GSphere::transform(GMatrix44 matrix) {

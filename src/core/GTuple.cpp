@@ -12,7 +12,7 @@ float GTuple::lengthSquared() {
     return this->dot(*this);
 }
 
-GTuple GTuple::normalized() {
+GTuple GTuple::normalize() {
     float magnitude = this->magnitude();
     GTuple fTuple;
     fTuple.fX = this->fX / magnitude;
@@ -22,8 +22,8 @@ GTuple GTuple::normalized() {
     return fTuple;
 }
 
-GTuple reflect(GTuple& normal) {
-    return (this - normal * 2 * dot(this, normal))
+GTuple GTuple::reflect(GTuple& normal) {
+    return *this - normal * 2 * this->dot(normal);
 }
 
 float GTuple::dot(GTuple& rhs) {
@@ -79,5 +79,14 @@ GTuple GTuple::operator*(const float& rhs) {
     fTuple.fY = this->fY * rhs;
     fTuple.fZ = this->fZ * rhs;
     fTuple.fW = this->fW * rhs;
+    return fTuple;
+} 
+
+GTuple GTuple::operator*(const GTuple& rhs) {
+    GTuple fTuple;
+    fTuple.fX = this->fX * rhs.x();
+    fTuple.fY = this->fY * rhs.y();
+    fTuple.fZ = this->fZ * rhs.z();
+    fTuple.fW = this->fW * rhs.w();
     return fTuple;
 } 
