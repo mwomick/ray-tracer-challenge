@@ -22,5 +22,8 @@ spheres: $(G_DEPS) tests/SpheresTest.cpp
 phong: $(G_DEPS) tests/PhongTest.cpp
 	$(CC_DEBUG) $(G_INC) $(G_DEPS) tests/PhongTest.cpp -o phong
 
+world: $(G_DEPS) tests/WorldTest.cpp
+	$(CC_DEBUG) $(G_INC) $(G_DEPS) tests/WorldTest.cpp -o world
+
 clean: 
 	@rm -rf canvas matrix transformations spheres phong *.ppm

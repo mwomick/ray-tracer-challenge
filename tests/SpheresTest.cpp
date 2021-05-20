@@ -1,3 +1,4 @@
+/*
 #include <iostream>
 
 #include "include/core/GSphere.h"
@@ -25,10 +26,11 @@ int main() {
             GTuple rd = GTuple(j-WIDTH/2, HEIGHT/2-i, -115);
             GRay r = GRay(ro, rd);
             float t0, t1;
-            if(sp.intersect(r, t0, t1))
+           if(sp.intersect(r, t0, t1))
                 canvas.blit(j, i, RED);
         }
     }
 
     canvas.writeToFile("spheres.ppm");
 }
+*/

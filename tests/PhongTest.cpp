@@ -1,3 +1,4 @@
+/*
 #include <iostream>
 
 #include "include/core/GSphere.h"
@@ -41,3 +42,4 @@ int main() {
 
     canvas.writeToFile("phong.ppm");
 }
+*/

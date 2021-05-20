@@ -1,6 +1,4 @@
 #include "include/core/GSphere.h"
-#include <iostream>
-using namespace std;
 
 /* bool GSphere::intersect(GRay& ray, float& t0, float& t1) {
     ray = ray.transform(this->fMatrix.inverse());
@@ -16,27 +14,20 @@ using namespace std;
     return true;
 }
  */
- 
-bool GSphere::intersect(GRay& ray, float& t0, float& t1) {
+
+int GSphere::intersect(GRay& ray, GIntersections& dst) {
     GRay r_n = ray.transform(this->fMatrix.inverse());
     float a = r_n.direction().lengthSquared();
     GTuple sp_to_ra = r_n.origin();
     float b = 2 * r_n.direction().dot(sp_to_ra);
     float c = sp_to_ra.lengthSquared() - 1;
     float disc = b*b - 4*a*c;
-    if(disc < 0) { return false; }
-    t0 = (-b - sqrt(disc)) / (2 * a);
-    t1 = (-b + sqrt(disc)) / (2 * a);
-    return true;
-}
-
-GTuple GSphere::normal_at(GTuple& point) {
-    GTuple obj_normal = fMatrix.inverse() * point;
-    GTuple world_normal = fMatrix.inverse().transpose() * obj_normal;
-    world_normal.setW(0);
-    return world_normal.normalize();
-}
-
-void GSphere::transform(GMatrix44 matrix) {
-    this->fMatrix = matrix * this->fMatrix;
+    if(disc < 0) { return 0; }
+    float t0 = (-b - sqrt(disc)) / (2 * a);
+    float t1 = (-b + sqrt(disc)) / (2 * a);
+    GIntersection i0 = GIntersection(t0, this);
+    GIntersection i1 = GIntersection(t1, this);
+    dst.insert(i0);
+    dst.insert(i1);
+    return 2;
 }

@@ -3,4 +3,6 @@ matrix
 canvas
 transformations
 spheres
+phong
+world
 *.ppm
