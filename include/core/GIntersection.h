@@ -3,6 +3,7 @@
 
 class GObject;
 
+
 class GIntersection {
 
 public: 
@@ -11,11 +12,13 @@ public:
         fObject = object;
     }
 
-    float getT() { return fT; }
+    float getT() const { return fT; }
 
+    bool operator <(const GIntersection& b) const { return this->fT < b.getT(); }
 private:
     float fT;
     GObject* fObject;
 };
+
 
 #endif

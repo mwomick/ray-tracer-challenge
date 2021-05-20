@@ -12,9 +12,10 @@ class GWorld {
 public:
     GIntersections intersect_world(GRay ray);
     void add(GObject* object) { fObjects.push_back(object); }
+    void add(GLight* light) { fLight = light; }
 
 private:
-    GLight fLight;
+    GLight* fLight;
     std::vector<GObject*> fObjects;
 };
 
