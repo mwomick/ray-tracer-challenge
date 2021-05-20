@@ -23,10 +23,12 @@ public:
         return &fIntersections; 
     }
 
+    GIntersection top() { return this->getIntersections()->front(); }
+
     void print() { 
         std::cout << "Intersections {"; 
         for(GIntersection i : *this->getIntersections()) {
-             std::cout << "\n\t" << i.getT(); 
+             std::cout << "\n\t" << i.t(); 
         } 
         std::cout << "\n};\n"; 
     }

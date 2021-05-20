@@ -12,9 +12,10 @@ public:
         fObject = object;
     }
 
-    float getT() const { return fT; }
+    float t() const { return fT; }
+    GObject* object() const { return fObject; }
 
-    bool operator <(const GIntersection& b) const { return this->fT < b.getT(); }
+    bool operator <(const GIntersection& b) const { return this->t() < b.t(); }
 private:
     float fT;
     GObject* fObject;

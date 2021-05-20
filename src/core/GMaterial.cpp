@@ -1,12 +1,12 @@
 #include "include/core/GMaterial.h"
 #include <iostream>
 using namespace std;
-GTuple GMaterial::lighting(GLight light, GTuple point, GTuple eyev, GTuple normalv) {
+GTuple GMaterial::lighting(GLight* light, GTuple point, GTuple eyev, GTuple normalv) {
     // Calculate ambient light:
     //   1. Combine light color with object color (multiplication)
 
-    GTuple effective_color = this->color() * light.intensity();
-    GTuple lightv = (light.position() - point).normalize();
+    GTuple effective_color = this->color() * light->intensity();
+    GTuple lightv = (light->position() - point).normalize();
     GTuple ambient = effective_color * this->ambient();
     float light_dot_normal = lightv.dot(normalv);
     GTuple diffuse, specular;
@@ -21,7 +21,7 @@ GTuple GMaterial::lighting(GLight light, GTuple point, GTuple eyev, GTuple norma
         if(reflect_dot_eye <= 0) { specular = GTuple(0, 0, 0); }
         else {
             float factor = pow(reflect_dot_eye, this->shininess());
-            specular = light.intensity() * this->specular() * factor;
+            specular = light->intensity() * this->specular() * factor;
         }
     }
     return ambient + diffuse + specular;
