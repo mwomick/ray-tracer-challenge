@@ -3,40 +3,42 @@
 
 #include "include/core/GIntersection.h"
 
-#include <iostream>
 #include <vector>
 #include <algorithm>
 
 
 class GIntersections {
 public:
-    GIntersections(){}
+    GIntersections() { 
+        std::make_heap(fIntersections.begin(), fIntersections.end(), intersection_lt());
+        fHit = false; 
+    }
 
     void insert(GIntersection intersection) { 
+        if(intersection.t() > 0) { fHit = true; }
         fIntersections.push_back(intersection);
-        std::push_heap(fIntersections.begin(), fIntersections.end()); 
+        std::push_heap(fIntersections.begin(), fIntersections.end(), intersection_lt()); 
         fCount++; 
     }
 
     std::vector<GIntersection>* getIntersections() { 
-        std::reverse(fIntersections.begin(), fIntersections.end());
-        return &fIntersections; 
+        if( std::is_heap(fIntersections.begin(), fIntersections.end(), intersection_lt())){
+            std::sort_heap(fIntersections.begin(), fIntersections.end(), intersection_lt());
+        }
+
+        return &fIntersections;
     }
 
     GIntersection top() { return this->getIntersections()->front(); }
-
-    void print() { 
-        std::cout << "Intersections {"; 
-        for(GIntersection i : *this->getIntersections()) {
-             std::cout << "\n\t" << i.t(); 
-        } 
-        std::cout << "\n};\n"; 
-    }
+    GIntersection at(int index) { assert(index < fCount); return this->getIntersections()->at(index); }
 
     int count() { return fCount; }
+    bool hasHit() { return fHit; }
+
 private:
     std::vector<GIntersection> fIntersections;
-    int fCount;
+    int fCount = 0;
+    bool fHit = false;
 };
 
 #endif

@@ -12,12 +12,7 @@ public:
     GMaterial& material() { return fMaterial; }
     void setMaterial(GMaterial material) { fMaterial = material; }
 
-    GTuple normal_at(GTuple& point) {
-        GTuple obj_normal = fMatrix.inverse() * point;
-        GTuple world_normal = fMatrix.inverse().transpose() * obj_normal;
-        world_normal.setW(0);
-        return world_normal.normalize();
-    }
+    virtual GTuple normal_at(GTuple& point) { return GTuple(0, 0, 0); }
 
     void transform(GMatrix44 matrix) {
         this->fMatrix = matrix * this->fMatrix;

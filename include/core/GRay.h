@@ -38,7 +38,7 @@ public:
 
 private:
     GTuple fOrigin, fDirection;
-    GMatrix44 fMatrix;
+    GMatrix44 fMatrix = GMatrix44();
 };
 
 #endif

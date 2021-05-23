@@ -13,10 +13,9 @@ bool GCanvas::writeToFile(const char path[]) {
         for(int x = 0; x < this-> fWidth; x++) {
             if(x % 23 == 22) { file << "\n"; }
             GTuple* color = this->getAddr(x, y);
-            // note, we are not rounding, so this is inaccurate atm
-            file << min(255,G_FL_ROUND_TO_INT(color->x()*255.f)) << 
-                    " " << min(255,G_FL_ROUND_TO_INT(color->y()*255.f)) << 
-                    " " << min(255,G_FL_ROUND_TO_INT(color->z()*255.f)) << " ";
+            file << max(0, min(255, G_FL_ROUND_TO_INT(color->x()*255.f))) << 
+                    " " << max(0, min(255, G_FL_ROUND_TO_INT(color->y()*255.f))) << 
+                    " " << max(0, min(255, G_FL_ROUND_TO_INT(color->z()*255.f))) << " ";
         }
         file << "\n";
     }

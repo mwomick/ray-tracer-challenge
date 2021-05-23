@@ -1,8 +1,9 @@
 #ifndef GTuple_DEFINED
 #define GTuple_DEFINED
 
+#include <iostream> 
 #include <math.h>
- 
+
 #include "include/core/GMath.h"
 
 class GTuple {
@@ -17,6 +18,7 @@ public:
         this->fX = x;
         this->fY = y;
         this->fZ = z;
+        this->fW = 0;
     }
 
     GTuple(float x, float y, float z, float w) {
@@ -48,7 +50,7 @@ public:
     float y() const { return fY; }
     float z() const { return fZ; }
     float w() const { return fW; }
-    
+
 private:
     float fX, fY, fZ, fW;
 

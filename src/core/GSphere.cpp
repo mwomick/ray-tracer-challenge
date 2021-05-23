@@ -1,5 +1,4 @@
 #include "include/core/GSphere.h"
-
 /* bool GSphere::intersect(GRay& ray, float& t0, float& t1) {
     ray = ray.transform(this->fMatrix.inverse());
     GTuple rd = ray.direction();
@@ -30,4 +29,12 @@ int GSphere::intersect(GRay& ray, GIntersections& dst) {
     dst.insert(i0);
     dst.insert(i1);
     return 2;
+}
+
+GTuple GSphere::normal_at(GTuple& point)
+{
+    GTuple obj_normal = fMatrix.inverse() * point;
+    GTuple world_normal = fMatrix.inverse().transpose() * obj_normal;
+    world_normal.setW(0);
+    return world_normal.normalize();
 }

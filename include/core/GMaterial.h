@@ -7,7 +7,7 @@
 class GMaterial {
 public:
     GMaterial() {
-        fColor = GTuple(.45, .45, .45);
+        fColor = GTuple(1, 1, 1);
         fAmbient = 0.1;
         fDiffuse = 0.9;
         fSpecular = 0.9;
@@ -22,6 +22,10 @@ public:
     }
 
     void setColor(GTuple color) { fColor = color; }
+    void setAmbient(float ambient) { fAmbient = ambient; }
+    void setDiffuse(float diffuse) { fDiffuse = diffuse; }
+    void setSpecular(float specular) { fSpecular = specular; } 
+    void setShininess(float shininess) { fShininess = shininess; }
 
     GTuple color() { return fColor; }
     float ambient() { return fAmbient; }

@@ -10,9 +10,9 @@ public:
         fPosition = GTuple(0., 0., 0.);
     }
 
-    GLight(GTuple intensity, GTuple position) {
-        fIntensity = intensity;
+    GLight(GTuple position, GTuple intensity) {
         fPosition = position;
+        fIntensity = intensity;
     }
 
     GTuple intensity() { return fIntensity; }

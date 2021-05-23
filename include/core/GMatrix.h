@@ -1,7 +1,7 @@
 #ifndef GMatrix_DEFINED
 #define GMatrix_DEFINED
 
-#include <math.h>
+#include <cmath>
 
 #include "include/core/GMath.h"
 #include "include/core/GTuple.h"
@@ -147,6 +147,19 @@ public:
                          sin(angle), cos(angle), 0, 0, 
                          0, 0, 1, 0,
                          0, 0, 0, 1);
+    }
+
+    static GMatrix44 Orient(GTuple from, GTuple to, GTuple up) {
+        GTuple forward = (to - from).normalize();
+        GTuple upn = up.normalize();
+        GTuple left = forward.cross(upn);
+        GTuple true_up = left.cross(forward);
+        GMatrix44 m = GMatrix44(left.x(),     left.y(),     left.z(),     0,
+                         true_up.x(),  true_up.y(),  true_up.z(),  0,
+                         -forward.x(), -forward.y(), -forward.z(), 0,
+                         0,             0,           0,             1);
+        GMatrix44 t = GMatrix44::Translate(-from.x(), -from.y(), -from.z());
+        return m * t;
     }
 
 private:

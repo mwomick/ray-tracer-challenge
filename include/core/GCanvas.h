@@ -10,9 +10,9 @@ class GCanvas {
 public:
     GTuple* pixels() const { return fPixels; }
 
-    GCanvas(int height, int width) {
-        fHeight = height;
+    GCanvas(int width, int height) {
         fWidth = width;
+        fHeight = height;
         fPixels = (GTuple*)malloc(fHeight*fWidth*sizeof(GTuple));
     }
     
