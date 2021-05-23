@@ -1,7 +1,7 @@
 #ifndef GHit_DEFINED
 #define GHit_DEFINED
 
-#include <iostream>
+#include "include/core/GMath.h"
 
 class GHit {
 public:
@@ -15,6 +15,7 @@ public:
             fNormal = -fNormal;
             fInside = true;
         }
+        fOver = fPoint + fNormal * G_FL_EPSILON;
     }
 
     bool isInside() { return fInside; }
@@ -22,10 +23,11 @@ public:
     GTuple eye() { return fEye; }
     GTuple normal() { return fNormal; }
     GObject* object() { return fIntersection->object(); }
-
+    GTuple over() { return fOver; }
+    float t() { return fIntersection->t(); }
 private:
     GIntersection* fIntersection;
-    GTuple fPoint, fEye, fNormal;
+    GTuple fPoint, fEye, fNormal, fOver;
     bool fInside;
 };
 

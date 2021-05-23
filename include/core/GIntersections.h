@@ -6,7 +6,6 @@
 #include <vector>
 #include <algorithm>
 
-
 class GIntersections {
 public:
     GIntersections() { 

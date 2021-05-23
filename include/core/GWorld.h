@@ -13,16 +13,17 @@
 class GWorld {
 public:
     GWorld() {}
-    
+
     GIntersections intersect_world(GRay& ray);
     void add(GObject* object) { fObjects.push_back(object); }
     void add(GLight light) { fLight = light; }
 
     GTuple shade_hit(GHit* hit) {
         return hit->object()->material().lighting(&this->fLight, 
-                                                    hit->point(), 
+                                                    hit->over(), 
                                                     hit->eye(), 
-                                                    hit->normal());
+                                                    hit->normal(), 
+                                                    isShadowed(hit->over()));
     }
 
     GTuple color_at(GRay& ray) {
@@ -38,6 +39,25 @@ public:
             return t;
         }
         return GTuple(0, 0, 0);
+    }
+
+    bool isShadowed(GTuple point) {
+        GTuple pt_to_lt = this->fLight.position() - point;
+        float dist = pt_to_lt.magnitude();
+        GRay shadow_ray = GRay(point, pt_to_lt.normalize());
+        GIntersections i = intersect_world(shadow_ray);
+        if(i.hasHit()) {
+            int x = 0;
+            for(; i.at(x).t() < 0 && x < i.count(); x++) {
+                continue;
+            }
+            GIntersection top = i.at(x);
+            GHit hit = GHit(&top, &shadow_ray);
+            if(hit.t() < dist) {
+                return true;
+            }
+        }
+        return false;
     }
 
     static GWorld* default_world() {

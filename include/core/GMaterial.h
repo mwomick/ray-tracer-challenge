@@ -33,7 +33,8 @@ public:
     float specular() { return fSpecular; }
     float shininess() { return fShininess; }
 
-    GTuple lighting(GLight* light, GTuple point, GTuple eyev, GTuple normalv);
+    GTuple lighting(GLight* light, GTuple point, 
+                    GTuple eyev, GTuple normalv, bool shadowed);
 
 private:
     GTuple fColor;
