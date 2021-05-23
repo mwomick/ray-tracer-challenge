@@ -93,9 +93,9 @@ public:
     GMatrix44 operator*(const GMatrix44& rhs) { return this->multiply(rhs); }
     GTuple operator*(GTuple rhs) { 
         float x, y, z;
-        x = rhs.x()*this->fMat[kSX] + rhs.x()*this->fMat[kKXY] + rhs.x()*this->fMat[kKXZ] + this->fMat[kTX];
-        y = rhs.y()*this->fMat[kSY] + rhs.y()*this->fMat[kKYX] + rhs.y()*this->fMat[kKYZ] + this->fMat[kTY];
-        z = rhs.z()*this->fMat[kSZ] + rhs.z()*this->fMat[kKZX] + rhs.z()*this->fMat[kKZY] + this->fMat[kTZ];
+        x = rhs.x()*this->fMat[kSX] + rhs.y()*this->fMat[kKXY] + rhs.z()*this->fMat[kKXZ] + this->fMat[kTX];
+        y = rhs.y()*this->fMat[kSY] + rhs.x()*this->fMat[kKYX] + rhs.z()*this->fMat[kKYZ] + this->fMat[kTY];
+        z = rhs.z()*this->fMat[kSZ] + rhs.x()*this->fMat[kKZX] + rhs.y()*this->fMat[kKZY] + this->fMat[kTZ];
         return GTuple(x, y, z);
     }
 

@@ -7,19 +7,6 @@
 #include <iostream>
 
 int main() {
-    // GWorld* w = GWorld::default_world(); 
-/*
-    GWorld w = GWorld();
-    GSphere s9 = GSphere();
-    w.add(&s9);
-    GRay r1 = GRay(GTuple(0, 0, 0, 1), GTuple(0, 0, 1));
-    w.color_at(r1);
-
-    GMatrix44 mat = GMatrix44::Orient(GTuple(1, 3, 2), GTuple(4, -2, 8), GTuple(1, 1, 0));
-    std::cout << mat[0] << "\t" << mat[1] << "\t" << mat[2] << "\t" << mat[3] << "\t" 
-    << "\n" << mat[4] << "...\n";
-*/
-
 
     GWorld world = GWorld();
     GLight light = GLight(GTuple(-10, 10, -10), GTuple(1, 1, 1));
@@ -31,21 +18,21 @@ int main() {
     floor.material().setSpecular(0);
     world.add(&floor);
 
-/*     GSphere left_wall = GSphere();
+    GSphere left_wall = GSphere();
     GMatrix44 t = GMatrix44::Scale(10, 0.01, 10);
     t = GMatrix44::RotateX(1.5708) * t;
     t = GMatrix44::RotateY(-0.7853982) * t;
-    // t = GMatrix44::Translate(0, 0, 5) * t;
+    t = GMatrix44::Translate(0, 0, 5) * t;
     left_wall.transform(t);
     left_wall.material().setColor(GTuple(1, 0.9, 0.9));
     left_wall.material().setSpecular(0);
-    world.add(&left_wall); */
+    world.add(&left_wall);
 
     GSphere right_wall = GSphere();
-    right_wall.transform((GMatrix44::Translate(0, 0, 5) *
-                        ( GMatrix44::RotateY(0.7853982) *
-                        ( GMatrix44::RotateX(1.570796) *
-                        GMatrix44::Scale(10, 0.01, 10) ) ) ));
+    right_wall.transform(GMatrix44::Translate(0, 0, 5) *
+                        GMatrix44::RotateY(0.7853982) *
+                        GMatrix44::RotateX(1.570796) *
+                        GMatrix44::Scale(10, 0.01, 10));
     right_wall.material().setColor(GTuple(1, 0.9, 0.9));
     right_wall.material().setSpecular(0);
     world.add(&right_wall);
@@ -80,22 +67,4 @@ int main() {
     GCanvas out = camera.render(world);
     out.writeToFile("world.ppm");
 
-/*
-    GCamera c1 = GCamera(125, 200, 1.5708);
-    std::cout << "Pixel size: " << c1.pixel_size() << "\n";
-*/
-
-//    GTuple v = GTuple(0, -1, 0, 0);
-  //  GTuple n = GTuple(.7071067812, .7071067812, 0, 0);
-    //v.reflect(n).print();
-
-    // s1.normal_at(pt);
-
-
-/*     GIntersections i1;
-    std::cout << s1.intersect(r1, i1) << " <-- No. of intersections: " << "\n";
-    GIntersection i2 = i1.at(0);
-    GHit h1 = GHit(&i2, &r1);
-    w.shade_hit(&h1).print(); */
-    
 }

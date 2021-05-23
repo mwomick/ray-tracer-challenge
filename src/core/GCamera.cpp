@@ -14,8 +14,8 @@ GCanvas GCamera::render(GWorld& world) {
 }
 
 GRay GCamera::ray_for_pixel(float x, float y) {
-    float x_offset = (x + 0.5) * this->pixel_size();
-    float y_offset = (y + 0.5) * this->pixel_size();
+    float x_offset = (x + 0.5) * this->fPixelSize;
+    float y_offset = (y + 0.5) * this->fPixelSize;
 
     float world_x = this->fHalfW - x_offset;
     float world_y = this->fHalfH - y_offset; 
@@ -25,18 +25,4 @@ GRay GCamera::ray_for_pixel(float x, float y) {
     GTuple dir = (pixel - origin).normalize();
     
     return GRay(origin, dir);
-}
-
-float GCamera::pixel_size() {
-    float half_view = tan(this->fFOV/2.);
-    float aspect = this->fWidth / this->fHeight;
-    if(aspect >= 1) {
-        this->fHalfW = half_view;
-        this->fHalfH = half_view / aspect;
-    }
-    else {
-        this->fHalfW = half_view * aspect;
-        this->fHalfH = half_view;
-    }
-    return (fHalfW * 2.) / this->fWidth;
 }
