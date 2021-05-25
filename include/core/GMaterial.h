@@ -1,8 +1,12 @@
 #ifndef GMaterial_DEFINED
 #define GMaterial_DEFINED
 
+// #include "include/core/GObject.h"
 #include "include/core/GTuple.h"
 #include "include/core/GLight.h"
+#include "include/core/GPattern.h"
+
+class GObject;
 
 class GMaterial {
 public:
@@ -12,6 +16,7 @@ public:
         fDiffuse = 0.9;
         fSpecular = 0.9;
         fShininess = 200.;
+        fPattern = nullptr;
     }
 
     GMaterial(float ambient, float diffuse, float specular, float shininess) {
@@ -19,6 +24,16 @@ public:
         fDiffuse = diffuse;
         fSpecular = specular;
         fShininess = shininess;
+        fPattern = nullptr;
+    }
+
+    GMaterial(float ambient, float diffuse, float specular, 
+              float shininess, GPattern* pattern) {
+        fAmbient = ambient;
+        fDiffuse = diffuse;
+        fSpecular = specular;
+        fShininess = shininess;
+        fPattern = pattern;
     }
 
     void setColor(GTuple color) { fColor = color; }
@@ -26,19 +41,22 @@ public:
     void setDiffuse(float diffuse) { fDiffuse = diffuse; }
     void setSpecular(float specular) { fSpecular = specular; } 
     void setShininess(float shininess) { fShininess = shininess; }
+    void setPattern(GPattern* pattern) { fPattern = pattern; }
 
     GTuple color() { return fColor; }
     float ambient() { return fAmbient; }
     float diffuse() { return fDiffuse; }
     float specular() { return fSpecular; }
     float shininess() { return fShininess; }
+    GPattern* pattern() { return fPattern; }
 
-    GTuple lighting(GLight* light, GTuple point, 
+    GTuple lighting(GObject* object, GLight* light, GTuple point, 
                     GTuple eyev, GTuple normalv, bool shadowed);
 
 private:
     GTuple fColor;
     float fAmbient, fDiffuse, fSpecular, fShininess;
+    GPattern* fPattern;
 };
 
 #endif

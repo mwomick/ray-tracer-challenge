@@ -90,3 +90,9 @@ GTuple GTuple::operator*(const GTuple& rhs) {
     fTuple.fW = this->fW * rhs.w();
     return fTuple;
 } 
+
+bool GTuple::operator==(const GTuple& rhs) {
+    return( abs(rhs.x() - this->x()) < G_FL_EPSILON &&
+            abs(rhs.y() - this->y()) < G_FL_EPSILON &&
+            abs(rhs.z() - this->z()) < G_FL_EPSILON);
+}

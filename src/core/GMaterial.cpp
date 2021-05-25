@@ -1,8 +1,18 @@
 #include "include/core/GMaterial.h"
+#include "include/core/GObject.h"
 
-GTuple GMaterial::lighting(GLight* light, GTuple point, 
+GTuple GMaterial::lighting(GObject* o, GLight* light, GTuple point, 
                            GTuple eyev, GTuple normalv, bool shadowed) {
-    GTuple effective_color = this->color() * light->intensity();
+
+    GTuple color;
+    if(this->pattern() != nullptr) {
+        color = this->pattern()->color_at(o->matrix().inverse()*point);
+    }
+    else {
+        color = this->color();
+    }
+    
+    GTuple effective_color = color * light->intensity();
     GTuple lightv = (light->position() - point).normalize();
     GTuple ambient = effective_color * this->ambient();
     float light_dot_normal = lightv.dot(normalv);

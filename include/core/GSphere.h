@@ -11,8 +11,8 @@
 class GSphere : public GObject {
 public:
     GSphere() { fMaterial = GMaterial(); fMatrix = GMatrix44(); }
-    int intersect(GRay& ray, GIntersections& dst) override;
-    GTuple normal_at(GTuple&) override;
+    int local_intersect(GRay& ray, GIntersections& dst) override;
+    GTuple local_normal_at(GTuple&) override;
 };
 
 #endif

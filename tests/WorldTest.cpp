@@ -1,8 +1,13 @@
 #include "include/core/GTuple.h"
 #include "include/core/GWorld.h"
 #include "include/core/GSphere.h"
+#include "include/core/GPlane.h"
 #include "include/core/GLight.h"
 #include "include/core/GCamera.h"
+
+#include "src/patterns/GStripePattern.h"
+#include "src/patterns/GLinearGradientPattern.h"
+#include "src/patterns/GRadialGradientPattern.h"
 
 #include <iostream>
 
@@ -12,51 +17,43 @@ int main() {
     GLight light = GLight(GTuple(-10, 10, -10), GTuple(1, 1, 1));
     world.add(light);
 
-    GSphere floor = GSphere();
-    floor.transform(GMatrix44::Scale(10, 0.01, 10));
-    floor.material().setColor(GTuple(1, 0.9, 0.9));
-    floor.material().setSpecular(0);
-    world.add(&floor);
+    GTuple colors[3] = {GTuple(1.0, 0.8, 0.1), GTuple(0.5, 1.0, 0.1), GTuple(0.1, 1, 0.5)};
+    GLinearGradientPattern p0 = GLinearGradientPattern(colors, 3);
+    GRadialGradientPattern p1 = GRadialGradientPattern(colors, 3);
+    GStripePattern p2 = GStripePattern(GTuple(0.8, 0.5, 0.1), GTuple(0.1, 0.5, 1));
+    p0.transform(GMatrix44::Scale(0.25, 0.25, 0.25));
+    p1.transform(GMatrix44::Translate(-0.25, 0, -0.25));
+    p2.transform(GMatrix44::Scale(0.25, 0, 0.25));
 
-    GSphere left_wall = GSphere();
-    GMatrix44 t = GMatrix44::Scale(10, 0.01, 10);
-    t = GMatrix44::RotateX(1.5708) * t;
-    t = GMatrix44::RotateY(-0.7853982) * t;
-    t = GMatrix44::Translate(0, 0, 5) * t;
-    left_wall.transform(t);
-    left_wall.material().setColor(GTuple(1, 0.9, 0.9));
-    left_wall.material().setSpecular(0);
-    world.add(&left_wall);
-
-    GSphere right_wall = GSphere();
-    right_wall.transform(GMatrix44::Translate(0, 0, 5) *
-                        GMatrix44::RotateY(0.7853982) *
-                        GMatrix44::RotateX(1.570796) *
-                        GMatrix44::Scale(10, 0.01, 10));
-    right_wall.material().setColor(GTuple(1, 0.9, 0.9));
-    right_wall.material().setSpecular(0);
-    world.add(&right_wall);
+    GPlane plane = GPlane();
+    plane.material().setPattern(&p2);
+    world.add(&plane);
 
     GSphere middle = GSphere();
-    middle.transform(GMatrix44::Translate(-0.5, 1, 0.5));
+    middle.transform(GMatrix44::Translate(-0.5, 1, 0.5) * GMatrix44::RotateZ(1.570796));
     middle.material().setColor(GTuple(0.1, 1, 0.5));
     middle.material().setDiffuse(0.7);
     middle.material().setSpecular(0.3);
+    middle.material().setPattern(&p0);
     world.add(&middle);
 
     GSphere right = GSphere();
     right.transform(GMatrix44::Translate(1.5, 0.5, -0.5) * 
-                    GMatrix44::Scale(0.5, 0.5, 0.5));
+                    GMatrix44::Scale(0.5, 0.5, 0.5) *
+                    GMatrix44::RotateZ(1.570796));
     right.material().setColor(GTuple(0.5, 1, 0.1));
     right.material().setDiffuse(0.7);
     right.material().setSpecular(0.3);
+    right.material().setPattern(&p1);
     world.add(&right);
 
     GSphere left = GSphere();
-    left.transform(GMatrix44::Translate(-1.5, 0.33, -0.75)*GMatrix44::Scale(0.33, 0.33, 0.33));
+    left.transform(GMatrix44::Translate(-1.5, 0.33, -0.75)*GMatrix44::Scale(0.33, 0.33, 0.33)
+    *GMatrix44::RotateZ(1.570796));
     left.material().setColor(GTuple(1, 0.8, 0.1));
     left.material().setDiffuse(0.7);
     left.material().setSpecular(0.3);
+    left.material().setPattern(&p2);
     world.add(&left);
 
     GCamera camera = GCamera(500, 250, 1.0471975512);

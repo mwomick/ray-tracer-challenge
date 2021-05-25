@@ -9,7 +9,6 @@
 #include "include/core/GRay.h"
 #include "include/core/GHit.h"
 
-
 class GWorld {
 public:
     GWorld() {}
@@ -19,7 +18,8 @@ public:
     void add(GLight light) { fLight = light; }
 
     GTuple shade_hit(GHit* hit) {
-        return hit->object()->material().lighting(&this->fLight, 
+        return hit->object()->material().lighting(hit->object(), 
+                                                    &this->fLight, 
                                                     hit->over(), 
                                                     hit->eye(), 
                                                     hit->normal(), 

@@ -14,11 +14,10 @@
 }
  */
 
-int GSphere::intersect(GRay& ray, GIntersections& dst) {
-    GRay r_n = ray.transform(this->fMatrix.inverse());
-    float a = r_n.direction().lengthSquared();
-    GTuple sp_to_ra = r_n.origin();
-    float b = 2 * r_n.direction().dot(sp_to_ra);
+int GSphere::local_intersect(GRay& ray, GIntersections& dst) {
+    float a = ray.direction().lengthSquared();
+    GTuple sp_to_ra = ray.origin();
+    float b = 2 * ray.direction().dot(sp_to_ra);
     float c = sp_to_ra.lengthSquared() - 1;
     float disc = b*b - 4*a*c;
     if(disc < 0) { return 0; }
@@ -31,10 +30,7 @@ int GSphere::intersect(GRay& ray, GIntersections& dst) {
     return 2;
 }
 
-GTuple GSphere::normal_at(GTuple& point)
+GTuple GSphere::local_normal_at(GTuple& point)
 {
-    GTuple obj_normal = fMatrix.inverse() * point;
-    GTuple world_normal = fMatrix.inverse().transpose() * obj_normal;
-    world_normal.setW(0);
-    return world_normal.normalize();
+    return point.normalize();
 }

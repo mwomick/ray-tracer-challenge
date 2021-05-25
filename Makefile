@@ -3,7 +3,7 @@ CC = g++
 CC_DEBUG = @$(CC) -std=c++11
 CC_RELEASE = @$(CC) -std=c++11 -O3 -DNDEBUG
 
-G_DEPS = src/core/*.cpp
+G_DEPS = src/core/*.cpp src/patterns/*.cpp
 
 G_INC = -I.
 
@@ -23,6 +23,9 @@ phong: $(G_DEPS) tests/PhongTest.cpp
 	$(CC_DEBUG) $(G_INC) $(G_DEPS) tests/PhongTest.cpp -o phong
 
 world: $(G_DEPS) tests/WorldTest.cpp
+	$(CC_DEBUG) $(G_INC) $(G_DEPS) tests/WorldTest.cpp -o world
+
+patterns: $(G_DEPS) tests/WorldTest.cpp
 	$(CC_DEBUG) $(G_INC) $(G_DEPS) tests/WorldTest.cpp -o world
 
 clean: 

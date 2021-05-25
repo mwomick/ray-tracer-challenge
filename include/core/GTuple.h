@@ -43,6 +43,7 @@ public:
     GTuple operator/(const float& rhs);
     GTuple operator*(const float& rhs);
     GTuple operator*(const GTuple& rhs);
+    bool operator==(const GTuple& rhs);
 
     void setW(float w) { fW = w; }
 
