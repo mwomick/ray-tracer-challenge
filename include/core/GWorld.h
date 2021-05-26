@@ -18,12 +18,23 @@ public:
     void add(GLight light) { fLight = light; }
 
     GTuple shade_hit(GHit* hit) {
-        return hit->object()->material().lighting(hit->object(), 
+        GTuple surface = hit->object()->material().lighting(hit->object(), 
                                                     &this->fLight, 
                                                     hit->over(), 
                                                     hit->eye(), 
                                                     hit->normal(), 
                                                     isShadowed(hit->over()));
+
+        GTuple reflected = reflected_color(hit);
+
+        return surface + reflected;
+    }
+
+    GTuple reflected_color(GHit* hit) {
+        if(hit->object()->material().reflectivity() == 0) { return GTuple(0, 0, 0); }
+        GRay ray = hit->reflect();
+        GTuple color = color_at(ray);
+        return color * hit->object()->material().reflectivity();
     }
 
     GTuple color_at(GRay& ray) {

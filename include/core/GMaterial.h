@@ -16,23 +16,26 @@ public:
         fDiffuse = 0.9;
         fSpecular = 0.9;
         fShininess = 200.;
+        fReflectivity = 0.;
         fPattern = nullptr;
     }
 
-    GMaterial(float ambient, float diffuse, float specular, float shininess) {
+    GMaterial(float ambient, float diffuse, float specular, float shininess, float reflectivity) {
         fAmbient = ambient;
         fDiffuse = diffuse;
         fSpecular = specular;
         fShininess = shininess;
+        fReflectivity = reflectivity;
         fPattern = nullptr;
     }
 
     GMaterial(float ambient, float diffuse, float specular, 
-              float shininess, GPattern* pattern) {
+              float shininess, float reflectivity, GPattern* pattern) {
         fAmbient = ambient;
         fDiffuse = diffuse;
         fSpecular = specular;
         fShininess = shininess;
+        fReflectivity = reflectivity;
         fPattern = pattern;
     }
 
@@ -42,12 +45,14 @@ public:
     void setSpecular(float specular) { fSpecular = specular; } 
     void setShininess(float shininess) { fShininess = shininess; }
     void setPattern(GPattern* pattern) { fPattern = pattern; }
-
+    void setReflectivity(float reflectivity) { fReflectivity = reflectivity; }
+    
     GTuple color() { return fColor; }
     float ambient() { return fAmbient; }
     float diffuse() { return fDiffuse; }
     float specular() { return fSpecular; }
     float shininess() { return fShininess; }
+    float reflectivity() { return fReflectivity; }
     GPattern* pattern() { return fPattern; }
 
     GTuple lighting(GObject* object, GLight* light, GTuple point, 
@@ -55,7 +60,7 @@ public:
 
 private:
     GTuple fColor;
-    float fAmbient, fDiffuse, fSpecular, fShininess;
+    float fAmbient, fDiffuse, fSpecular, fShininess, fReflectivity;
     GPattern* fPattern;
 };
 

@@ -15,6 +15,7 @@ public:
             fNormal = -fNormal;
             fInside = true;
         }
+        fReflect = ray->direction().reflect(fNormal);
         fOver = fPoint + fNormal * G_FL_EPSILON;
     }
 
@@ -24,10 +25,13 @@ public:
     GTuple normal() { return fNormal; }
     GObject* object() { return fIntersection->object(); }
     GTuple over() { return fOver; }
+    GRay reflect() { return GRay(fOver, fReflect); }
+    
     float t() { return fIntersection->t(); }
+
 private:
     GIntersection* fIntersection;
-    GTuple fPoint, fEye, fNormal, fOver;
+    GTuple fPoint, fEye, fNormal, fOver, fReflect;
     bool fInside;
 };
 
