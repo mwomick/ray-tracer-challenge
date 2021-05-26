@@ -28,6 +28,7 @@ int main() {
     plane.material().setColor(GTuple(0.5, 0.5, 0.5));
     plane.material().setShininess(.65);
     plane.material().setSpecular(.65);
+    plane.material().setReflectivity(0.5);
     world.add(&plane);
 
     GSphere middle = GSphere();
@@ -47,6 +48,7 @@ int main() {
     right.material().setDiffuse(0.7);
     right.material().setSpecular(0.3);
     right.material().setPattern(&p2);
+    right.material().setReflectivity(0.5);
     world.add(&right);
 
     GSphere left = GSphere();
@@ -56,6 +58,7 @@ int main() {
     left.material().setDiffuse(0.7);
     left.material().setSpecular(0.3);
     left.material().setPattern(&p2);
+    left.material().setReflectivity(0.5);
     world.add(&left);
 
     GCamera camera = GCamera(1500, 750, 1.0471975512);

@@ -17,7 +17,7 @@ public:
     void add(GObject* object) { fObjects.push_back(object); }
     void add(GLight light) { fLight = light; }
 
-    GTuple shade_hit(GHit* hit) {
+    GTuple shade_hit(GHit* hit, int remaining) {
         GTuple surface = hit->object()->material().lighting(hit->object(), 
                                                     &this->fLight, 
                                                     hit->over(), 
@@ -25,19 +25,19 @@ public:
                                                     hit->normal(), 
                                                     isShadowed(hit->over()));
 
-        GTuple reflected = reflected_color(hit);
+        GTuple reflected = reflected_color(hit, remaining);
 
         return surface + reflected;
     }
 
-    GTuple reflected_color(GHit* hit) {
-        if(hit->object()->material().reflectivity() == 0) { return GTuple(0, 0, 0); }
+    GTuple reflected_color(GHit* hit, int remaining) {
+        if(hit->object()->material().reflectivity() == 0 || remaining == 0) { return GTuple(0, 0, 0); }
         GRay ray = hit->reflect();
-        GTuple color = color_at(ray);
+        GTuple color = color_at(ray, remaining-1);
         return color * hit->object()->material().reflectivity();
     }
 
-    GTuple color_at(GRay& ray) {
+    GTuple color_at(GRay& ray, int remaining) {
         GIntersections i = intersect_world(ray);
         if(i.hasHit()){
             int x = 0;
@@ -46,7 +46,7 @@ public:
             }
             GIntersection top = i.at(x);
             GHit hit = GHit(&top, &ray);
-            GTuple t = shade_hit(&hit);
+            GTuple t = shade_hit(&hit, remaining);
             return t;
         }
         return GTuple(0, 0, 0);

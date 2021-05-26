@@ -6,7 +6,7 @@ GCanvas GCamera::render(GWorld& world) {
     for(int y = 0; y < this->fHeight; y++) {
         for(int x = 0; x < this->fWidth; x++) {
             GRay r = ray_for_pixel(x, y);
-            GTuple c = world.color_at(r);
+            GTuple c = world.color_at(r, 4);
             canvas.blit(x, y, c);
         }
     }
