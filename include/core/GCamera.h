@@ -39,6 +39,8 @@ private:
     GMatrix44 fMatrix;
 
     GRay ray_for_pixel(float x, float y);
+    GTuple sample(GWorld& world, float x, float y);
+
 };
 
 #endif

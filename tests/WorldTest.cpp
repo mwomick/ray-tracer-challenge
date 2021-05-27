@@ -61,7 +61,7 @@ int main() {
     left.material().setReflectivity(0.5);
     world.add(&left);
 
-    GCamera camera = GCamera(1500, 750, 1.0471975512);
+    GCamera camera = GCamera(2000, 1000, 1.0471975512);
     camera.transform(GMatrix44::Orient(GTuple(0, 1.5, -5), 
                                         GTuple(0, 1, 0), 
                                         GTuple(0, 1, 0)));
