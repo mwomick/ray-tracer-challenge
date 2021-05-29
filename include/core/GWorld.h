@@ -26,8 +26,9 @@ public:
                                                     isShadowed(hit->over()));
 
         GTuple reflected = reflected_color(hit, remaining);
+        GTuple refracted = refracted_color(hit, remaining);
 
-        return surface + reflected;
+        return surface + reflected + refracted;
     }
 
     GTuple reflected_color(GHit* hit, int remaining) {
@@ -37,15 +38,62 @@ public:
         return color * hit->object()->material().reflectivity();
     }
 
+    GTuple refracted_color(GHit* hit, int remaining) {
+        if(hit->object()->material().transparency() == 0 || remaining == 0) {
+            return GTuple(0, 0, 0);
+        }
+        float n_ratio = hit->n1() / hit->n2();
+        GTuple normal = hit->normal(); // TODO: normal() should return reference instead of GTuple?
+        float cos_i = hit->eye().dot(normal);
+        float sin2_t = n_ratio * n_ratio * (1. - cos_i*cos_i);
+        if(sin2_t > 1) { return GTuple(0, 0, 0); }
+        float cos_t = sqrt(1.0 - sin2_t);
+        GTuple dir = hit->normal() * (n_ratio * cos_i - cos_t) - hit->eye() * n_ratio;
+        GRay ray = GRay(hit->under(), dir);
+        GTuple color = color_at(ray, remaining-1) * hit->object()->material().transparency();
+        return color;
+    }
+
     GTuple color_at(GRay& ray, int remaining) {
         GIntersections i = intersect_world(ray);
         if(i.hasHit()){
             int x = 0;
-            for(; i.at(x).t() < 0 && x < i.count(); x++) {
-                continue;
+            
+            float n1 = 1.0;
+            float n2 = 1.0;
+
+            std::vector<GObject*> containers;
+
+            for(; x < i.count(); x++) {
+                // if it is a hit, set n1 to the most recently unexited object's refractive index
+                if(i.at(x).t() >= 0) {
+                    if(!containers.empty()) {
+                        n1 = containers.back()->material().refractive_index();
+                    }
+                }
+                // if the object has been entered and we encounter an intersection, the intersection is an exit
+                auto it = std::find(containers.begin(), containers.end(), i.at(x).object());
+                if(it != containers.end()) {
+                    // an object has been exited -> we don't need it anymore
+                    containers.erase(it);
+                }
+                else {
+                    // we enter an object; append it to containers
+                    containers.push_back(i.at(x).object());
+                }
+                // if it's a hit, now we know what n2 should be
+                if(i.at(x).t() >= 0) {
+                    if(!containers.empty()) {
+                        n2 = containers.back()->material().refractive_index();
+                    }
+                    break;
+                }
             }
-            GIntersection top = i.at(x);
-            GHit hit = GHit(&top, &ray);
+
+            GIntersection intersection = i.at(x);
+            GHit hit = GHit(&intersection, &ray);
+            hit.setRefraction(n1, n2);
+
             GTuple t = shade_hit(&hit, remaining);
             return t;
         }

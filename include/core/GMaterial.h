@@ -54,6 +54,8 @@ public:
     void setShininess(float shininess) { fShininess = shininess; }
     void setPattern(GPattern* pattern) { fPattern = pattern; }
     void setReflectivity(float reflectivity) { fReflectivity = reflectivity; }
+    void setTransparency(float transparency) { fTransparency = transparency; }
+    void setRefractiveIndex(float refractive_index) { fRefractiveIndex = refractive_index; }
 
     GTuple color() { return fColor; }
     float ambient() { return fAmbient; }
@@ -62,13 +64,15 @@ public:
     float shininess() { return fShininess; }
     float reflectivity() { return fReflectivity; }
     GPattern* pattern() { return fPattern; }
-
+    float transparency() { return fTransparency; }
+    float refractive_index() { return fRefractiveIndex; }
+    
     GTuple lighting(GObject* object, GLight* light, GTuple point, 
                     GTuple eyev, GTuple normalv, bool shadowed);
 
 private:
     GTuple fColor;
-    float fAmbient, fDiffuse, fSpecular, fShininess, fReflectivity;
+    float fAmbient, fDiffuse, fSpecular, fShininess, fTransparency, fRefractiveIndex, fReflectivity;
     GPattern* fPattern;
 };
 

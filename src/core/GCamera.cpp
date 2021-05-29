@@ -31,43 +31,29 @@ GRay GCamera::ray_for_pixel(float x, float y) {
 }
 
 GTuple GCamera::sample(GWorld& world, float x, float y) {
-    GTuple sum = GTuple(0, 0, 0);
-    GTuple storage[26];
-
-    int max = 26;
-    int min = 9;
-    int i = 0;
-
     GTuple average = GTuple(0, 0, 0);
-    GTuple mse = GTuple(0, 0, 0);
 
-    for(; (i < min || (mse.x() + mse.y() + mse.z()) > 0.0006) && i < max; i++) {
-        int rand_x = rand() % 26;
-        float scaled_x = rand_x / 26.;
-        int rand_y = rand() % 26;
-        float scaled_y = rand_y / 26.;
-        GRay ray = ray_for_pixel(x+scaled_x, y+scaled_y);
-        GTuple c = world.color_at(ray, 5);
+    float block_size = .2;
+    int jitter = 9.;
+    float left = 0.;
+    float top = 0.;
 
-        sum = sum + c;
-        storage[i] = c;
+    float i = 0;
 
-        average = GTuple(0, 0, 0);
-        for(int j = 0; j <= i; j++) {
-            average = average + storage[j];
+    while(top < 1.) {
+        left = 0.;
+        while(left < 1.) {
+            float rand_x = block_size * ((float)(rand() % jitter) / (float)jitter);
+            float rand_y = block_size * ((float)(rand() % jitter) / (float)jitter);
+            GRay ray = ray_for_pixel(x+left+rand_x, y+top+rand_y);
+            GTuple c = world.color_at(ray, 5);
+            i = i + 1.;
+            average = average + c;
+            left += block_size;
         }
-        average = average / (i+1);
+        top += block_size;
+    }
 
-        mse = GTuple(0, 0, 0);
-        for(int j = 0; j <= i; j++) {
-            mse = mse + (storage[j] - average) * (storage[j] - average);            
-        }
-        mse = mse / (i+1);
-        
-        // std::cout <<(mse.x() + mse.y() + mse.z())/(3); 
-    }
-    if(i!=9 && i!=26) {
-        std::cout << i << "\n";
-    }
+    average = average / i;
     return average;
 }
