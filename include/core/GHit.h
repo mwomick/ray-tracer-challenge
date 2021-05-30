@@ -32,6 +32,19 @@ public:
     GRay reflect() { return GRay(fOver, fReflect); }
     float n1() { return fRefractiveIndex1; }
     float n2() { return fRefractiveIndex2; }
+    float schlick() { 
+        float cos = this->eye().dot(fNormal);
+        if(this->n1() > this->n2()) {
+            float n = this->n1() / this->n2();
+            float sin2_t = n*n * (1.0 - cos*cos);
+            if (sin2_t > 1.0) { return 1.0;}
+            float cos_t = sqrt(1.0 - sin2_t);
+            cos = cos_t;
+        }
+        float sum = this->n1() + this->n2();
+        float r0 = (this->n1() - this->n2()) / sum*sum;
+        return r0 + (1 - r0) * pow(1 - cos, 5);
+    }
 
     void setRefraction(float n1, float n2) { fRefractiveIndex1 = n1; fRefractiveIndex2 = n2; }
 

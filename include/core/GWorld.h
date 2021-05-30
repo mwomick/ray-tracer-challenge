@@ -28,6 +28,13 @@ public:
         GTuple reflected = reflected_color(hit, remaining);
         GTuple refracted = refracted_color(hit, remaining);
 
+        if(hit->object()->material().reflectivity() > 0 && 
+            hit->object()->material().transparency() > 0) {
+                float reflectance = hit->schlick();
+                return surface + reflected * reflectance +
+                                 refracted * (1- reflectance);
+        }
+
         return surface + reflected + refracted;
     }
 

@@ -58,7 +58,7 @@ int main() {
     GSphere left = GSphere();
     left.transform(GMatrix44::Translate(-1.5, 0.33, -0.75)*GMatrix44::Scale(0.33, 0.33, 0.33)
     *GMatrix44::RotateZ(1.570796));
-    left.material().setColor(GTuple(0, 0, 0));
+    left.material().setColor(GTuple(0.045, 0.045, 0.045));
     left.material().setDiffuse(0.7);
     left.material().setSpecular(0.3);
     left.material().setReflectivity(0.5);
@@ -66,7 +66,7 @@ int main() {
     left.material().setRefractiveIndex(1.52);
     world.add(&left);
 
-    GCamera camera = GCamera(1000, 500, 1.0471975512);
+    GCamera camera = GCamera(2000, 1000, 1.0471975512);
     camera.transform(GMatrix44::Orient(GTuple(0, 1.5, -5), 
                                         GTuple(0, 1, 0), 
                                         GTuple(0, 1, 0)));
